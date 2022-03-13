@@ -14,9 +14,9 @@ providers, but we can still use it to test more generic ideas.
 
 Now let's discuss different modes of computation that we can potentially
 support. To formalize our thoughts, let's think of computation in terms
-of "tasks" that clients may ask the chain to run. Task has some number of
+of "tasks" that clients may ask the chain to run. Each task has some number of
 parameters (think: asset, time interval), and running it requires
-some input data (which we generally assumed is stored on-chain) and produces
+some input data (which we generally assume is stored on-chain) and produces
 an output (think: median price). We avoid the term "query" because it has a
 special meaning in most blockchains and implies reading data from one node
 without relying on any consensus mechanism.
@@ -67,10 +67,10 @@ available, not necessarily in the same block where the task was received.
 Since input data can only become available as a result of transactions, we
 can design the chain so that it tracks the pending tasks and which data they
 require, and as soon as new data arrives and some tasks can be completed, they
-must be completed. We can do this by storing results and emitting events in
-`EndBlock`. `EndBlock` must process results for all previously pending tasks
-that just became completed, so we still need to be very careful to ensure that
-our computation is fast.
+must be completed in the same block. We can do this by storing results and
+emitting events in `EndBlock`. `EndBlock` must process results for all
+previously pending tasks that just became completed, so we still need to be
+very careful to ensure that our computation is fast.
 
 This modification is useful for tasks similar to price consolidation, where
 input data availability is an issue, but the computation itself is cheap.
@@ -82,7 +82,7 @@ ideas we could actually use for price consolidation to ideas mostly interesting
 from a generic computation perspective)
 
 If we want to support any kinds of computation that may be too expensive for
-a single block (so maybe more that 1 second of run time), we need to somehow
+a single block (so maybe more than 1 second of run time), we need to somehow
 perform them outside of the main Tendermint consensus loop. That said, we still
 want some redundancy and consensus about the results of these computations.
 
@@ -92,18 +92,18 @@ sends the results to the node. It is assumed that the node and its sidecar
 process completely trust each other, so they should most likely run on the
 same machine to prevent any network attack vectors.
 
-The interesting question now is: how exactly the results are published to the
+The interesting question now is: how exactly are the results published to the
 chain and agreed upon? Since our computation is asynchronous (it happens in
 a background process), the time when result becomes available on different
 nodes may be vastly different. In particular, nothing guarantees that all
-nodes will provide the results of their computation in the same block.
+nodes will get the results of their computation in the same block.
 
 There are two general ways in which we can handle this. One is fully decoupling the
 result consensus algorithm from the Tendermint block consensus algorithm.
 This means that every node publishes its result as a transaction, and when
 enough results have been provided, the chain agrees on the consensus result.
 This seems easy until we start thinking about what happens in the case of
-different results from different nodes. Such situation is interesting: it
+different results from different nodes. This situation is interesting: it
 implies that the chain has consensus on the Tendermint level (transactions,
 blocks, state), but not on the "application" level. So if we wanted to handle
 this somehow (exclude faulty nodes, slash their stake, etc.), we would need
@@ -133,7 +133,7 @@ to Tendermint and rely on the same punishment logic for:
 * Actually creating invalid blocks.
 * Computing wrong results.
 * Not computing results in time. (timeouts are not explicitly discussed, but
-  we obviously need to have them in this model)
+  we obviously need to handle them in this model)
 
 Considering the downsides of the latter idea, it seems that the former
 (app-level result consensus) is much more viable. We would likely track
@@ -162,7 +162,7 @@ chains that need them? Well... there is this thing called "oracles"... :)
 So besides being an interesting thought experiment, is any of this actually
 useful for our three-step price consolidation roadmap?
 
-Well, not directly. As we mentioned in the beginning, price consolidation does
+Well, not completely. As we mentioned in the beginning, price consolidation does
 not need a blockchain per se, though it could be useful for governance and
 financial incentives. But if we squint a little and think of Cosmos as a
 consensus mechanism with some extra features (some of which may actually be
