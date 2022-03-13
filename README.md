@@ -8,7 +8,7 @@ for the same price feed.
 
 This project uses Cosmos SDK and Starport. You first need to have Go installed
 in some manner reasonable for your platform. You can then install Starport.
-The official docs suggests `curl ... | bash` which is not something I'm a fan
+The official docs suggest `curl ... | bash` which is not something I'm a fan
 of, so I recommend you instead build from source:
 
 ```bash
