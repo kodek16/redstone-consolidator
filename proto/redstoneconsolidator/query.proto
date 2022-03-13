@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "redstoneconsolidator/params.proto";
+import "redstoneconsolidator/price_feed.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/kodek16/redstone-consolidator/x/redstoneconsolidator/types";
@@ -15,7 +16,17 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/kodek16/redstoneconsolidator/redstoneconsolidator/params";
   }
-  // this line is used by starport scaffolding # 2
+  // Queries a PriceFeed by index.
+	rpc PriceFeed(QueryGetPriceFeedRequest) returns (QueryGetPriceFeedResponse) {
+		option (google.api.http).get = "/kodek16/redstoneconsolidator/redstoneconsolidator/price_feed/{name}";
+	}
+
+	// Queries a list of PriceFeed items.
+	rpc PriceFeedAll(QueryAllPriceFeedRequest) returns (QueryAllPriceFeedResponse) {
+		option (google.api.http).get = "/kodek16/redstoneconsolidator/redstoneconsolidator/price_feed";
+	}
+
+// this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -25,6 +36,24 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetPriceFeedRequest {
+	  string name = 1;
+
+}
+
+message QueryGetPriceFeedResponse {
+	PriceFeed priceFeed = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllPriceFeedRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPriceFeedResponse {
+	repeated PriceFeed priceFeed = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3

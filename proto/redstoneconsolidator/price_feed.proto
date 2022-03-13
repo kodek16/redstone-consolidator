@@ -1,0 +1,14 @@
+syntax = "proto3";
+package kodek16.redstoneconsolidator.redstoneconsolidator;
+
+option go_package = "github.com/kodek16/redstone-consolidator/x/redstoneconsolidator/types";
+
+message PriceFeed {
+  string name = 1; 
+  string birthTime = 2; 
+  string interval = 3; 
+  repeated string providers = 4; 
+  repeated string assets = 5; 
+  
+}
+

@@ -3,6 +3,7 @@ package kodek16.redstoneconsolidator.redstoneconsolidator;
 
 import "gogoproto/gogo.proto";
 import "redstoneconsolidator/params.proto";
+import "redstoneconsolidator/price_feed.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/kodek16/redstone-consolidator/x/redstoneconsolidator/types";
@@ -10,5 +11,6 @@ option go_package = "github.com/kodek16/redstone-consolidator/x/redstoneconsolid
 // GenesisState defines the redstoneconsolidator module's genesis state.
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
+  repeated PriceFeed priceFeedList = 2 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }
