@@ -1,0 +1,10 @@
+# Added by default.
+vue/node_modules
+vue/dist
+release/
+.idea/
+.vscode/
+.DS_Store
+
+# Me trying to filter out some Starport-generated files.
+vue/src/store/generated

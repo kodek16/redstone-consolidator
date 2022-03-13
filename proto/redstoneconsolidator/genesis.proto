@@ -1,0 +1,14 @@
+syntax = "proto3";
+package kodek16.redstoneconsolidator.redstoneconsolidator;
+
+import "gogoproto/gogo.proto";
+import "redstoneconsolidator/params.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/kodek16/redstone-consolidator/x/redstoneconsolidator/types";
+
+// GenesisState defines the redstoneconsolidator module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}

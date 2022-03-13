@@ -1,0 +1,12 @@
+syntax = "proto3";
+package kodek16.redstoneconsolidator.redstoneconsolidator;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/kodek16/redstone-consolidator/x/redstoneconsolidator/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}
